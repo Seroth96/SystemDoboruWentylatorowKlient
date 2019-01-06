@@ -40,6 +40,10 @@ namespace SystemDoboruKlient.Helpers
 
         public static WentylatorsDTO PackWentylatorToDTO(Wentylators w)
         {
+            if (w == null)
+            {
+                return default(WentylatorsDTO);
+            }
             var wentylatorDTO = new WentylatorsDTO
             {
                 AirMassFlowFrom = w.AirMassFlowFrom,

@@ -27,7 +27,7 @@ namespace SystemDoboruKlient.Controllers
 
         [HttpGet("[action]")]
         [EnableCors("MyPolicy")]
-        public IEnumerable<WentylatorsDTO> GetWentylators(IWentylatorParams wentylatorParams)
+        public IEnumerable<WentylatorsDTO> GetWentylators(WentylatorParams wentylatorParams)
         {
             _logger.LogInformation("Getting wentylators {0}", wentylatorParams);
             var Wentylators = _context.Wentylators.Include(w => w.Coefficients).Include(w => w.Nature).AsEnumerable();
@@ -40,7 +40,7 @@ namespace SystemDoboruKlient.Controllers
 
         [HttpGet("[action]")]
         [EnableCors("MyPolicy")]
-        public WentylatorsDTO GetWentylator(IWentylatorParams wentylatorParams)
+        public WentylatorsDTO GetWentylator(WentylatorParams wentylatorParams)
         {
             _logger.LogInformation("Getting wentylator {0}", wentylatorParams);
             var wentylators = _context.Wentylators.Include(w => w.Coefficients).Include(w => w.Nature).AsEnumerable();            

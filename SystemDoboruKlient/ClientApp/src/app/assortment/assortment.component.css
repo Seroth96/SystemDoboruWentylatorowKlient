@@ -2,3 +2,11 @@
   width: 100%;
   height: 800px;
 }
+
+h2{
+  text-align:center;
+}
+.form-group{
+  padding: 20px;
+  margin:20px;
+}

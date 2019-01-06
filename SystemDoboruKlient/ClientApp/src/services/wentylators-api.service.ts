@@ -13,12 +13,14 @@ export class WentylatorsApiService {
 
 
   // Uses http.get() to load data from a single API endpoint
-  getWentylators(params: any[]) {
+  getWentylators(params?: any[]) {
     let myHttpParams = new HttpParams(); //Create new HttpParams
-    params.forEach(param =>
-      myHttpParams = myHttpParams.set(param.name, param.value)
-    );
-    console.log("params", myHttpParams);
+    if (params) {
+      params.forEach(param =>
+        myHttpParams = myHttpParams.set(param.name, param.value)
+      );
+     // console.log("params", myHttpParams);
+    }
 
     return this.http.get(
       this.baseUrl + 'api/Wentylators/GetWentylators',
@@ -30,13 +32,32 @@ export class WentylatorsApiService {
   }
 
   getWentylator(params: any[]) {
-    let myHttpParams = new HttpParams(); //Create new HttpParams     
-    params.forEach(param =>
-      myHttpParams = myHttpParams.set(param.name, param.value)
-    );
-    console.log("params", myHttpParams);
+    let myHttpParams = new HttpParams(); //Create new HttpParams
+    if (params) {
+      params.forEach(param =>
+        myHttpParams = myHttpParams.set(param.name, param.value)
+      );
+      //console.log("params", myHttpParams);
+    }
     return this.http.get(
       this.baseUrl + 'api/Wentylators/GetWentylator',
+      {
+        headers: Headers,
+        params: myHttpParams,
+        observe: 'response'
+      });
+  }
+
+  getNatures(params?: any[]) {
+    let myHttpParams = new HttpParams(); //Create new HttpParams
+    if (params) {
+      params.forEach(param =>
+        myHttpParams = myHttpParams.set(param.name, param.value)
+      );
+    }   
+
+    return this.http.get(
+      this.baseUrl + 'api/Natures',
       {
         headers: Headers,
         params: myHttpParams,

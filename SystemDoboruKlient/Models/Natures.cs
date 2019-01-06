@@ -13,6 +13,6 @@ namespace SystemDoboruKlient.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Wentylators> Wentylators { get; set; }
+        public virtual ICollection<Wentylators> Wentylators { get; set; }
     }
 }

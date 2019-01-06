@@ -24,14 +24,14 @@ namespace SystemDoboruKlient.ModelsDTO
         public ICollection<CoefficientsDTO> Coefficients { get; set; }
     }
 
-    public interface IWentylatorParams
+    public class WentylatorParams
     {
-        int Id { get; set; }
-        string Name { get; set; }
-        string Nature { get; set; }
-        double Power { get; set; }
-        double Revolution { get; set; }
-        double AirMassFlow { get; set; }
-        double Pressure { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = String.Empty;
+        public string Nature { get; set; } = String.Empty;
+        public string Power { get; set; } = String.Empty;
+        public string Revolution { get; set; } = String.Empty;
+        public string AirMassFlow { get; set; } = String.Empty;
+        public string Pressure { get; set; } = String.Empty;
     }
 }

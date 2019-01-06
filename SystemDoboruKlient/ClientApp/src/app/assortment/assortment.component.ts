@@ -11,6 +11,14 @@ import { WentylatorsApiService } from '../../services/wentylators-api.service';
 })
 /** assortment component*/
 export class AssortmentComponent {
+  Name: string;
+  Nature: any;
+  Power: string;
+  Revolution: string;
+  AirMassFlow: string;
+  Pressure: string;
+  natures: any;
+    
 
   stock: StockChart;
   dataLoaded: boolean = true;
@@ -20,6 +28,13 @@ export class AssortmentComponent {
   }
 
   ngOnInit() {
+    this.WentylatorsApi.getNatures().subscribe(response => {
+      console.log(response.body);
+      this.natures = response.body;
+    },
+      error => console.error(error),
+      () => console.log('done')
+    );
     var someOtherVariable: Array<[number, number]> = [
       [Number(239), 47.08],
       [Number(240), 47.33],
@@ -194,34 +209,31 @@ export class AssortmentComponent {
   }
 
   SearchForMatches() {
-    var params = [{
+    var params = [];
+    params.concat({
+      name: "Pressure",
+      value: this.Pressure
+    });
+    params.concat({
+      name: "AirMassFlow",
+      value: this.AirMassFlow
+    } );
+    params.concat({
       name: "Name",
-      value: "valuetest"
-    },
-    {
+      value: this.Name
+    });
+    params.concat({
       name: "Power",
-      value: 123
-    },
-    {
+      value: this.Power
+    });
+    params.concat({
       name: "Revolution",
-      value: 23
-      },
-      {
-        name: "AirMassFlow",
-        value: 23.5
-      },
-      {
-        name: "Pressure",
-        value: 1234
-      },
-      {
-        name: "Id",
-        value: 2
-      },
-      {
-        name: "Nature",
-        value: "promieniowe"
-      }];
+      value: this.Revolution
+    });
+    params.concat({
+      name: "Nature",
+      value: this.Nature != null ? this.Nature.name : ""
+    });
 
     var paramsSolo = [{
       name: "Name",
@@ -306,5 +318,18 @@ export class AssortmentComponent {
     ];
     //this.stock.options.series = myData;
     this.stock.ref.addSeries(this.myData[0], true);
+  }
+
+  config = {
+    displayKey: "name", //if objects array passed which key to be displayed defaults to description
+    search: true, //true/false for the search functionlity defaults to false,
+            height: 'auto', //height of the list so that if there are more no of items it can show a scroll defaults to auto. With auto height scroll will never appear
+            placeholder: 'Select', // text to be displayed when no item is selected defaults to Select,
+            customComparator: () => { }, // a custom function using which user wants to sort the items. default is undefined and Array.sort() will be used in that case,
+            limitTo: 8, // a number thats limits the no of options displayed in the UI similar to angular's limitTo pipe
+            moreText: 'more', // text to be displayed whenmore than one items are selected like Option 1 + 5 more
+            noResultsFound: 'No results found!', // text to be displayed when no items are found while searching
+            searchPlaceholder: 'Wyszukaj', // label thats displayed in search input,
+            searchOnKey: 'name' // key on which search should be performed this will be selective search. if undefined this will be extensive search on all keys
   }
 }
