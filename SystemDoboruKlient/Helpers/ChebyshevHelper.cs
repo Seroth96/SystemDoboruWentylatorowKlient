@@ -51,6 +51,20 @@ namespace SystemDoboruKlient.Helpers
             return sum;
         }
 
+        internal static System.Collections.Generic.IEnumerable<double> SampleRange(double From, double To, int n)
+        {
+            double range = To - From;
+            double step = range / (n-1);
+            var samples = new double[n];
+            for (int i = 0; i < n-1; i++)
+            {
+                samples[i] = From + i * step;
+            }
+            samples[n - 1] = To;
+
+            return samples;
+        }
+
         public static double Normalize(double a, double b, double x)
         {
             return ((2 * x) - a - b) / (b - a);

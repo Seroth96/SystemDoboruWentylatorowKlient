@@ -130,7 +130,7 @@ export class AssortmentComponent {
       tooltip: {
         split: true,        
         headerFormat: 'Wydajność: {point.x:.2f} [m3/h] <br>',
-        pointFormat: 'Ciśnienie: {point.y} [Pa]',
+        pointFormat: 'Ciśnienie: {point.y:.2f} [Pa]',
         shared: true,
         crosshairs: [true, true]
       },
@@ -141,15 +141,18 @@ export class AssortmentComponent {
           xAxis: 0
         }
       },
+      scrollbar: {
+        enabled: false
+      },
       xAxis: [
         {
-        ordinal: false,
-        allowDecimals: true,
-        showLastLabel: false,
-        gridLineWidth: 1,
-       // minorTickInterval: 'auto',
-       // minTickInterval: 0.01,
-        tickAmount: 50,
+          ordinal: false,
+          allowDecimals: true,
+          showLastLabel: true,
+          gridLineWidth: 1,
+          minTickInterval: 1,
+          tickInterval: 20,
+          tickWidth: 1,
         labels: {
           format: '{value} m3/h'
         },
@@ -160,13 +163,11 @@ export class AssortmentComponent {
         {
           ordinal: false,
           allowDecimals: true,
-          showLastLabel: false,
+          showLastLabel: true,
           gridLineWidth: 1,
-          //  minorTickInterval: 'auto',
-          //  minTickInterval: 0.01,
-          //tickAmount: 50,
-          tickInterval: 0.1,
-          tickWidth: 0,
+          minTickInterval: 1,
+          tickInterval: 20,
+          tickWidth: 1,
           labels: {
             formatter: function () {
               var xd = Number(this.value) / 1000;
@@ -184,7 +185,7 @@ export class AssortmentComponent {
           text: 'Ciśnienie'
         },
         labels: {
-          format: '{value:.2f} Pa'
+          format: '{value} Pa'
         }
       },
       plotOptions: {
@@ -267,18 +268,62 @@ export class AssortmentComponent {
   }
 
   SearchForMatches() {
+    var self = this;
     var params = this.SetParams();
     var wentylators: any;
     this.WentylatorsApi.getWentylators(params).subscribe(response => {
       console.log(response.body);
       wentylators = response.body;
+      console.log(wentylators);
+      //dla każdego wentylatora, wysłać zapytanie do controlera o dane do wykresu [X,Y]
+      for (var i = 0; i < wentylators.length; i++) {
+        var params = [{
+          name: "Id",
+          value: wentylators[i].id
+        }];
+        this.WentylatorsApi.getApproximationValues(params).subscribe(response => {
+          console.log(response.body);
+          var wentylator: any = response.body;
+          console.log('Wentylator', wentylator);
+          self.stock.ref.addSeries({
+            name: wentylator.name,
+            id: wentylator.id,
+            data: wentylator.data,
+            xAxis: 1
+          }, true);
+        },
+          error => console.error(error),
+          () => console.log('done')
+        );
+      } 
     },
       error => console.error(error),
       () => console.log('done')
     );
+    
+  }
 
-    //dla każdego wentylatora, wysłać zapytanie do controlera o dane do wykresu [X,Y]
+  openModel() {
+    this.myModal.nativeElement.className = 'modal show fade in';
+  }
+  closeModel() {
+    this.myModal.nativeElement.className = 'modal hide';
+  }
 
+  config = {
+    displayKey: "name", //if objects array passed which key to be displayed defaults to description
+    search: true, //true/false for the search functionlity defaults to false,
+            height: 'auto', //height of the list so that if there are more no of items it can show a scroll defaults to auto. With auto height scroll will never appear
+            placeholder: 'Select', // text to be displayed when no item is selected defaults to Select,
+            customComparator: () => { }, // a custom function using which user wants to sort the items. default is undefined and Array.sort() will be used in that case,
+            limitTo: 8, // a number thats limits the no of options displayed in the UI similar to angular's limitTo pipe
+            moreText: 'more', // text to be displayed whenmore than one items are selected like Option 1 + 5 more
+            noResultsFound: 'No results found!', // text to be displayed when no items are found while searching
+            searchPlaceholder: 'Wyszukaj', // label thats displayed in search input,
+            searchOnKey: 'name' // key on which search should be performed this will be selective search. if undefined this will be extensive search on all keys
+  }
+
+  test() {
     var someOtherVariable: Array<[number, number]> = [
       [0.39, 47.08],
       [0.40, 47.33],
@@ -341,25 +386,5 @@ export class AssortmentComponent {
     ];
     //this.stock.options.series = myData;
     this.stock.ref.addSeries(this.myData[0], true);
-  }
-
-  openModel() {
-    this.myModal.nativeElement.className = 'modal show fade in';
-  }
-  closeModel() {
-    this.myModal.nativeElement.className = 'modal hide';
-  }
-
-  config = {
-    displayKey: "name", //if objects array passed which key to be displayed defaults to description
-    search: true, //true/false for the search functionlity defaults to false,
-            height: 'auto', //height of the list so that if there are more no of items it can show a scroll defaults to auto. With auto height scroll will never appear
-            placeholder: 'Select', // text to be displayed when no item is selected defaults to Select,
-            customComparator: () => { }, // a custom function using which user wants to sort the items. default is undefined and Array.sort() will be used in that case,
-            limitTo: 8, // a number thats limits the no of options displayed in the UI similar to angular's limitTo pipe
-            moreText: 'more', // text to be displayed whenmore than one items are selected like Option 1 + 5 more
-            noResultsFound: 'No results found!', // text to be displayed when no items are found while searching
-            searchPlaceholder: 'Wyszukaj', // label thats displayed in search input,
-            searchOnKey: 'name' // key on which search should be performed this will be selective search. if undefined this will be extensive search on all keys
   }
 }

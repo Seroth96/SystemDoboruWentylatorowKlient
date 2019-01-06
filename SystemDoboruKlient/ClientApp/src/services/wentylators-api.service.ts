@@ -65,4 +65,21 @@ export class WentylatorsApiService {
       });
   }
 
+  getApproximationValues(params?: any[]) {
+    let myHttpParams = new HttpParams(); //Create new HttpParams
+    if (params) {
+      params.forEach(param =>
+        myHttpParams = myHttpParams.set(param.name, param.value)
+      );
+    }
+
+    return this.http.get(
+      this.baseUrl + 'api/Chebyshev/GetApproximationValues',
+      {
+        headers: Headers,
+        params: myHttpParams,
+        observe: 'response'
+      });
+  }
+
 }
