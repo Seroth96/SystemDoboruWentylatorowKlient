@@ -14,6 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { AssortmentComponent } from './assortment/assortment.component';
+import { WentylatorsApiService } from '../services/wentylators-api.service';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AssortmentComponent } from './assortment/assortment.component';
     ])
   ],
   providers: [
+    WentylatorsApiService,
     { provide: HIGHCHARTS_MODULES, useFactory: () => 
       [ 
         more, 

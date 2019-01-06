@@ -15,7 +15,7 @@ namespace SystemDoboruKlient.Helpers
             {
                 AirMassFlowFrom = w.AirMassFlowFrom,
                 AirMassFlowTo = w.AirMassFlowTo,
-                Coefficients = w.Coefficients.Select(c => new CoefficientsDTO
+                Coefficients = w.Coefficients.Where(c => !c.IsArchived).Select(c => new CoefficientsDTO
                 {
                     Id = c.Id,
                     IsArchived = c.IsArchived,
@@ -44,7 +44,7 @@ namespace SystemDoboruKlient.Helpers
             {
                 AirMassFlowFrom = w.AirMassFlowFrom,
                 AirMassFlowTo = w.AirMassFlowTo,
-                Coefficients = w.Coefficients.Select(c => new CoefficientsDTO
+                Coefficients = w.Coefficients.Where(c => !c.IsArchived).Select(c => new CoefficientsDTO
                 {
                     Id = c.Id,
                     IsArchived = c.IsArchived,

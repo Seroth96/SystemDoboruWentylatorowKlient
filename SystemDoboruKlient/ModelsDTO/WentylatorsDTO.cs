@@ -23,4 +23,15 @@ namespace SystemDoboruKlient.ModelsDTO
         public NaturesDTO Nature { get; set; }
         public ICollection<CoefficientsDTO> Coefficients { get; set; }
     }
+
+    public interface IWentylatorParams
+    {
+        int Id { get; set; }
+        string Name { get; set; }
+        string Nature { get; set; }
+        double Power { get; set; }
+        double Revolution { get; set; }
+        double AirMassFlow { get; set; }
+        double Pressure { get; set; }
+    }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SystemDoboruKlient.Helpers;
 using SystemDoboruKlient.Models;
 using SystemDoboruKlient.ModelsDTO;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SystemDoboruKlient.Controllers
 {
@@ -26,12 +27,11 @@ namespace SystemDoboruKlient.Controllers
 
         [HttpGet("[action]")]
         [EnableCors("MyPolicy")]
-        public IEnumerable<WentylatorsDTO> GetWentylators(params KeyValuePair<string, string>[] list)
+        public IEnumerable<WentylatorsDTO> GetWentylators(IWentylatorParams wentylatorParams)
         {
-            _logger.LogInformation("Getting wentylators {0}", list);
+            _logger.LogInformation("Getting wentylators {0}", wentylatorParams);
             var Wentylators = _context.Wentylators.Include(w => w.Coefficients).Include(w => w.Nature).AsEnumerable();
-
-            Wentylators = QueryHelper.QueryAllWentylators(Wentylators, list);
+            Wentylators = QueryHelper.QueryAllWentylators(Wentylators, wentylatorParams);
             var wentylatorsDTO = DTOHelper.PackWentylatorsToDTO(Wentylators);
             
             return wentylatorsDTO;
@@ -40,11 +40,11 @@ namespace SystemDoboruKlient.Controllers
 
         [HttpGet("[action]")]
         [EnableCors("MyPolicy")]
-        public WentylatorsDTO GetWentylator(params KeyValuePair<string, string>[] list)
+        public WentylatorsDTO GetWentylator(IWentylatorParams wentylatorParams)
         {
-            _logger.LogInformation("Getting wentylator {0}", list);
-            var Wentylators = _context.Wentylators.Include(w => w.Coefficients).Include(w => w.Nature).AsEnumerable();
-            var wentylator = QueryHelper.QueryOneWentylator(Wentylators, list);
+            _logger.LogInformation("Getting wentylator {0}", wentylatorParams);
+            var wentylators = _context.Wentylators.Include(w => w.Coefficients).Include(w => w.Nature).AsEnumerable();            
+            var wentylator = QueryHelper.QueryOneWentylator(wentylators, wentylatorParams);
             var wentylatorsDTO = DTOHelper.PackWentylatorToDTO(wentylator);
 
             return wentylatorsDTO;

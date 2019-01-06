@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { StockChart, Chart } from 'angular-highcharts';
 import { HttpClient } from '@angular/common/http';
 import { IndividualSeriesOptions } from 'highcharts';
+import { WentylatorsApiService } from '../../services/wentylators-api.service';
 
 @Component({
     selector: 'app-assortment',
@@ -10,16 +11,12 @@ import { IndividualSeriesOptions } from 'highcharts';
 })
 /** assortment component*/
 export class AssortmentComponent {
-  private _baseUrl: string;
-  private _http: HttpClient;
 
   stock: StockChart;
   dataLoaded: boolean = true;
   myData: IndividualSeriesOptions[];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this._http = http;
-    this._baseUrl = baseUrl;
+  constructor(private WentylatorsApi: WentylatorsApiService, @Inject('BASE_URL') private baseUrl: string) {
   }
 
   ngOnInit() {
@@ -197,7 +194,53 @@ export class AssortmentComponent {
   }
 
   SearchForMatches() {
-    
+    var params = [{
+      name: "Name",
+      value: "valuetest"
+    },
+    {
+      name: "Power",
+      value: 123
+    },
+    {
+      name: "Revolution",
+      value: 23
+      },
+      {
+        name: "AirMassFlow",
+        value: 23.5
+      },
+      {
+        name: "Pressure",
+        value: 1234
+      },
+      {
+        name: "Id",
+        value: 2
+      },
+      {
+        name: "Nature",
+        value: "promieniowe"
+      }];
+
+    var paramsSolo = [{
+      name: "Name",
+      value: "valuetest"
+    }];
+    this.WentylatorsApi.getWentylators(params).subscribe(response => {
+      console.log(response);
+    },
+      error => console.error(error),
+      () => console.log('done')
+    );
+
+    this.WentylatorsApi.getWentylator(paramsSolo).subscribe(response => {
+      console.log(response);
+    },
+      error => console.error(error),
+      () => console.log('done')
+    );
+
     var someOtherVariable: Array<[number, number]> = [
       [0.39, 47.08],
       [0.40, 47.33],

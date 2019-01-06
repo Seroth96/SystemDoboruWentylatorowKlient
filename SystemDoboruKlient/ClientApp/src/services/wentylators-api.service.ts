@@ -13,46 +13,35 @@ export class WentylatorsApiService {
 
 
   // Uses http.get() to load data from a single API endpoint
-  getWentylators(params: any[] ) {
+  getWentylators(params: any[]) {
     let myHttpParams = new HttpParams(); //Create new HttpParams
     params.forEach(param =>
-      myHttpParams.set(param.name, param.value)
+      myHttpParams = myHttpParams.set(param.name, param.value)
     );
+    console.log("params", myHttpParams);
 
-    this.http.get(
-      this.baseUrl + 'api/SampleData/WeatherForecasts',
+    return this.http.get(
+      this.baseUrl + 'api/Wentylators/GetWentylators',
       {
         headers: Headers,
         params: myHttpParams,
         observe: 'response'
-      }).subscribe(response => {
-        console.log(response);
-      },
-      error => console.error(error),
-      () => console.log('done')
-      );
-    return '';
+      });
   }
 
   getWentylator(params: any[]) {
-    let myHttpParams = new HttpParams(); //Create new HttpParams
+    let myHttpParams = new HttpParams(); //Create new HttpParams     
     params.forEach(param =>
-      myHttpParams.set(param.name, param.value)
+      myHttpParams = myHttpParams.set(param.name, param.value)
     );
-
-    this.http.get(
-      this.baseUrl + 'api/SampleData/WeatherForecasts',
+    console.log("params", myHttpParams);
+    return this.http.get(
+      this.baseUrl + 'api/Wentylators/GetWentylator',
       {
         headers: Headers,
         params: myHttpParams,
         observe: 'response'
-      }).subscribe(response => {
-        console.log(response);
-      },
-        error => console.error(error),
-        () => console.log('done')
-      );
-    return '';
+      });
   }
 
 }
