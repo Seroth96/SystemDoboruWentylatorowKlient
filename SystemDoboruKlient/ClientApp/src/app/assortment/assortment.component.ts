@@ -1,8 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { StockChart, Chart } from 'angular-highcharts';
 import { HttpClient } from '@angular/common/http';
 import { IndividualSeriesOptions } from 'highcharts';
 import { WentylatorsApiService } from '../../services/wentylators-api.service';
+import { isNullOrUndefined } from 'util';
+
 
 @Component({
     selector: 'app-assortment',
@@ -18,7 +20,10 @@ export class AssortmentComponent {
   AirMassFlow: string;
   Pressure: string;
   natures: any;
-    
+
+  ModalContent: any;
+
+  @ViewChild('myModal') myModal;
 
   stock: StockChart;
   dataLoaded: boolean = true;
@@ -186,9 +191,21 @@ export class AssortmentComponent {
         series: {          
           cursor: 'pointer',
           events: {
-            click: function (e) {
-              console.log(e);//TODO: Funkcja pokazuje informacje o wentylatorze
-              alert(e.point.series.name);
+            click: (e) => {
+              var self = this;              
+              console.log(e);        
+              var params = [{
+                name: "Id",
+                value: e.point.series.options.id
+              }];
+              this.WentylatorsApi.getWentylator(params).subscribe(response => {
+                console.log(response);
+                self.ModalContent = response.body;
+                self.openModel();
+              },
+                error => console.error(error),
+                () => console.log('done')
+              );
             }
           }
         }
@@ -208,50 +225,59 @@ export class AssortmentComponent {
     });
   }
 
-  SearchForMatches() {
+  SetParams() {
     var params = [];
-    params.concat({
-      name: "Pressure",
-      value: this.Pressure
-    });
-    params.concat({
-      name: "AirMassFlow",
-      value: this.AirMassFlow
-    } );
-    params.concat({
-      name: "Name",
-      value: this.Name
-    });
-    params.concat({
-      name: "Power",
-      value: this.Power
-    });
-    params.concat({
-      name: "Revolution",
-      value: this.Revolution
-    });
-    params.concat({
-      name: "Nature",
-      value: this.Nature != null ? this.Nature.name : ""
-    });
+    if (!isNullOrUndefined(this.Pressure)) {
+      params.concat({
+        name: "Pressure",
+        value: this.Pressure
+      });
+    }
+    if (!isNullOrUndefined(this.AirMassFlow)) {
+      params.concat({
+        name: "AirMassFlow",
+        value: this.AirMassFlow
+      });
+    }
+    if (!isNullOrUndefined(this.Name)) {
+      params.concat({
+        name: "Name",
+        value: this.Name
+      });
+    }
+    if (!isNullOrUndefined(this.Power)) {
+      params.concat({
+        name: "Power",
+        value: this.Power
+      });
+    }
+    if (!isNullOrUndefined(this.Revolution)) {
+      params.concat({
+        name: "Revolution",
+        value: this.Revolution
+      });
+    }
+    if (!isNullOrUndefined(this.Nature)) {
+      params.concat({
+        name: "Nature",
+        value: this.Nature.name
+      });
+    }
+    return params;
+  }
 
-    var paramsSolo = [{
-      name: "Name",
-      value: "valuetest"
-    }];
+  SearchForMatches() {
+    var params = this.SetParams();
+    var wentylators: any;
     this.WentylatorsApi.getWentylators(params).subscribe(response => {
-      console.log(response);
+      console.log(response.body);
+      wentylators = response.body;
     },
       error => console.error(error),
       () => console.log('done')
     );
 
-    this.WentylatorsApi.getWentylator(paramsSolo).subscribe(response => {
-      console.log(response);
-    },
-      error => console.error(error),
-      () => console.log('done')
-    );
+    //dla każdego wentylatora, wysłać zapytanie do controlera o dane do wykresu [X,Y]
 
     var someOtherVariable: Array<[number, number]> = [
       [0.39, 47.08],
@@ -309,15 +335,19 @@ export class AssortmentComponent {
     ];
     this.myData = [{
       name: 'AAPL',
+      id: '1',
       data: someOtherVariable,
-    },
-    {
-      name: 'AAPL2',
-      data: someOtherVariable2,
     }
     ];
     //this.stock.options.series = myData;
     this.stock.ref.addSeries(this.myData[0], true);
+  }
+
+  openModel() {
+    this.myModal.nativeElement.className = 'modal show fade in';
+  }
+  closeModel() {
+    this.myModal.nativeElement.className = 'modal hide';
   }
 
   config = {

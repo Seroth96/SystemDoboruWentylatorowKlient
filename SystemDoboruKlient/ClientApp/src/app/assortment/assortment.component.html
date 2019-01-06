@@ -65,3 +65,24 @@
     </tbody>
   </table>
   </div>
+
+
+
+<div #myModal class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="closeModel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title ">Szczegóły Wentylatora</h5>
+      </div>
+      <div class="modal-body">
+        <p><strong>Nazwa: </strong> {{ ModalContent?.name }}</p>
+        <p><strong>Moc: </strong> {{ ModalContent?.power }} [W]</p>
+        <p><strong>Obroty: </strong> {{ ModalContent?.revolution }} [obr/min]</p>
+        <p><strong>Rodzaj: </strong> {{ ModalContent?.nature.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>
